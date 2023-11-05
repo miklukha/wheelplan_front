@@ -12,6 +12,8 @@ export const colors = {
   //auxiliary
   auxiliary: '#BCBCBC',
   inputBorder: '#938D8D',
+  //error
+  error: '#e60000',
 };
 
 export const fontSizes = {
@@ -23,8 +25,5 @@ export const fontSizes = {
 };
 
 export const utils = {
-  shadow: '0px 1px 4px rgba(0, 0, 0, 0.3)',
-  shadowOfSelect:
-    '0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 1px rgba(0, 0, 0, 0.14), 0px 2px 1px rgba(0, 0, 0, 0.2)',
   borderRadius: 10,
 };
