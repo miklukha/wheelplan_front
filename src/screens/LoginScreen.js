@@ -18,15 +18,13 @@ const fullLogoPath = '../assets/images/full-logo.png';
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 const initialState = {
-  nickname: '',
   email: '',
   password: '',
 };
 
-export const RegisterScreen = () => {
+export const LoginScreen = () => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
-  const [passwordConformation, setPasswordConformation] = useState('');
   const [errors, setErrors] = useState('');
 
   const hideKeyboard = () => {
@@ -44,28 +42,12 @@ export const RegisterScreen = () => {
       // dispatch(authSignUpUser(state));
       setErrors('');
       setState(initialState);
-      setPasswordConformation('');
     }
   };
 
   const formValidation = () => {
-    if (
-      !passwordConformation ||
-      !state.password ||
-      !state.nickname ||
-      !state.email
-    ) {
+    if (!state.password || !state.email) {
       setErrors("Всі поля обов'язкові");
-      return false;
-    }
-
-    if (state.password < 6) {
-      setErrors('Довжина паролю має бути довше за 6 символів');
-      return false;
-    }
-
-    if (passwordConformation !== state.password) {
-      setErrors('Паролі не співпадають');
       return false;
     }
 
@@ -80,43 +62,14 @@ export const RegisterScreen = () => {
   return (
     <Container>
       <TouchableWithoutFeedback onPress={hideKeyboard}>
-        <View
-          style={{
-            ...styles.wrapper,
-            marginTop: isShowKeyboard ? 20 : 60,
-          }}
-        >
-          <Image
-            source={require(fullLogoPath)}
-            style={{
-              ...styles.img,
-              marginBottom: isShowKeyboard ? 5 : 40,
-            }}
-          />
-          <Title
-            style={{
-              ...styles.title,
-              marginBottom: isShowKeyboard ? 5 : 30,
-            }}
-          >
-            Реєстрація
-          </Title>
+        <View style={styles.wrapper}>
+          <Image source={require(fullLogoPath)} style={styles.img} />
+          <Title style={styles.title}>Вхід</Title>
           <KeyboardAvoidingView
             behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
             style={styles.formWrapper}
           >
             <View style={styles.form}>
-              <View>
-                <Text style={styles.inputTitle}>Ім’я*</Text>
-                <TextInput
-                  style={styles.input}
-                  onFocus={() => setIsShowKeyboard(true)}
-                  value={state.nickname}
-                  onChangeText={value =>
-                    setState(prevState => ({ ...prevState, nickname: value }))
-                  }
-                />
-              </View>
               <View>
                 <Text style={styles.inputTitle}>Пошта*</Text>
                 <TextInput
@@ -140,21 +93,11 @@ export const RegisterScreen = () => {
                   }
                 />
               </View>
-              <View>
-                <Text style={styles.inputTitle}>Підтвердження пароля*</Text>
-                <TextInput
-                  style={styles.input}
-                  secureTextEntry={true}
-                  onFocus={() => setIsShowKeyboard(true)}
-                  value={passwordConformation}
-                  onChangeText={value => setPasswordConformation(value)}
-                />
-              </View>
             </View>
             <View>{errors && <Text style={styles.error}>{errors}</Text>}</View>
             <View style={styles.btnWrapper}>
               <Btn type="accent" handleAction={handleSubmit}>
-                Реєстрація
+                Логін
               </Btn>
               <SocialLogin />
             </View>
@@ -169,11 +112,15 @@ export const RegisterScreen = () => {
 const styles = StyleSheet.create({
   wrapper: {
     alignItems: 'center',
-    // paddingTop: 60,
+    paddingTop: 60,
   },
   img: {
     width: 380,
     height: 110,
+    marginBottom: 40,
+  },
+  title: {
+    marginBottom: 30,
   },
   formWrapper: {
     width: '100%',

@@ -5,13 +5,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 // import { Main } from './components/Main';
 import { View, StyleSheet } from 'react-native';
 import { colors } from './src/helpers/variables';
-import { RegisterScreen } from './src/screens';
+import { LoginScreen } from './src/screens';
 
 export default function App() {
   return (
     // <Provider store={store}>
     // <Provider>
-    <RegisterScreen />
+    <LoginScreen />
     // </Provider>
   );
 }
