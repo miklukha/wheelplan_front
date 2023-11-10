@@ -1,26 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
+// import { useSelector, useDispatch } from 'react-redux';
+import { NavigationContainer } from '@react-navigation/native';
+import { useRoute } from './router';
 
 // import { Provider } from 'react-redux';
 // import { store } from './redux/store';
 // import { Main } from './components/Main';
-import { View, StyleSheet } from 'react-native';
-import { colors } from './src/helpers/variables';
-import { LoginScreen } from './src/screens';
 
 export default function App() {
-  return (
-    // <Provider store={store}>
-    // <Provider>
-    <LoginScreen />
-    // </Provider>
-  );
-}
+  const [isAuth, setIsAuth] = useState(true);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.mainBg,
-  },
-});
+  const routing = useRoute(isAuth);
+
+  // const { stateChange } = useSelector((state) => state.auth);
+  // const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   dispatch(authStateCahngeUser());
+  // }, [stateChange]);
+  return <NavigationContainer>{routing}</NavigationContainer>;
+}

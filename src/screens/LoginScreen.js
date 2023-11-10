@@ -10,6 +10,7 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native';
 import { Container, Title, Btn, SocialLogin } from '../components';
 import { colors, fontSizes, utils } from '../helpers/variables';
@@ -22,7 +23,7 @@ const initialState = {
   password: '',
 };
 
-export const LoginScreen = () => {
+export const LoginScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState('');
@@ -101,6 +102,12 @@ export const LoginScreen = () => {
               </Btn>
               <SocialLogin />
             </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Registration')}
+              activeOpacity={0.5}
+            >
+              <Text style={styles.helper}>Немає акаунта? Реєстрація</Text>
+            </TouchableOpacity>
           </KeyboardAvoidingView>
           {/* </View> */}
         </View>
@@ -157,5 +164,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 20,
+  },
+  helper: {
+    fontSize: fontSizes.xs,
+    textDecorationLine: 'underline',
+    color: colors.mainText,
   },
 });

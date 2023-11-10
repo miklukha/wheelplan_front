@@ -5,7 +5,7 @@ import { colors, fontSizes } from '../helpers/variables';
 const titleImgPath = '../assets/images/title.png';
 const logoPath = '../assets/images/logo.png';
 
-export const MainScreen = () => {
+export const MainScreen = ({ navigation }) => {
   return (
     <Container>
       <View style={styles.wrapper}>
@@ -13,8 +13,13 @@ export const MainScreen = () => {
         <Text style={styles.idea}>Збалансуй свої цілі!</Text>
         <Image source={require(logoPath)} style={styles.logo} />
         <View style={styles.btnWrapper}>
-          <Btn type="accent">Реєстрація</Btn>
-          <Btn>Логін</Btn>
+          <Btn
+            type="accent"
+            handleAction={() => navigation.navigate('Registration')}
+          >
+            Реєстрація
+          </Btn>
+          <Btn handleAction={() => navigation.navigate('Login')}>Логін</Btn>
         </View>
         <View style={styles.anotherWay}>
           <View style={styles.continueWrapper}>

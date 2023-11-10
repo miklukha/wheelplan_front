@@ -18,6 +18,7 @@ export const colors = {
 
 export const fontSizes = {
   //text
+  xxs: 12,
   xs: 16,
   s: 18,
   m: 20,

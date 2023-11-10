@@ -9,5 +9,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: fontSizes.l,
     color: colors.mainText,
+    textAlign: 'center',
   },
 });
