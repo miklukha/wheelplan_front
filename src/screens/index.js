@@ -5,3 +5,4 @@ export * from './LoginScreen';
 export * from './CategoriesScreen';
 export * from './CategoriesDefaultScreen';
 export * from './CategoryScreen';
+export * from './CalendarScreen';

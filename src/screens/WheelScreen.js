@@ -1,10 +1,21 @@
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { Title, Container, Section } from '../components';
 import { colors, fontSizes, utils } from '../helpers/variables';
+import { categories } from '../helpers/categories';
+
+import React, { useState, useEffect } from 'react';
 
 export const WheelScreen = ({ navigation }) => {
+  const [data, setData] = useState(categories);
+
   const onClick = () => {
     navigation.navigate('Categories');
   };
@@ -26,6 +37,7 @@ export const WheelScreen = ({ navigation }) => {
             <MaterialIcons name="edit" size={18} color={colors.mainText} />
           </TouchableOpacity>
         </View>
+        <View style={styles.wheel}></View>
       </Section>
     </Container>
   );
@@ -39,6 +51,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 20,
   },
   estimateWrapper: {
     flexDirection: 'row',
@@ -61,4 +74,5 @@ const styles = StyleSheet.create({
     borderRadius: utils.borderRadius,
     borderColor: colors.inputBorder,
   },
+  wheel: {},
 });

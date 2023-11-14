@@ -1,8 +1,8 @@
 import { View, StyleSheet } from 'react-native';
 import { colors, fontSizes } from '../helpers/variables';
 
-export const Container = ({ children }) => {
-  return <View style={styles.container}>{children}</View>;
+export const Container = ({ children, style }) => {
+  return <View style={{ ...styles.container, ...style }}>{children}</View>;
 };
 
 const styles = StyleSheet.create({

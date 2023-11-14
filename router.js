@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 
 import { colors } from './src/helpers/variables';
 import {
@@ -12,6 +12,7 @@ import {
   MainScreen,
   RegisterScreen,
   WheelScreen,
+  CalendarScreen,
 } from './src/screens';
 
 const AuthStack = createStackNavigator();
@@ -55,15 +56,28 @@ export const useRoute = isAuth => {
           backgroundColor: colors.mainBg,
         },
       }}
-      initialRouteName="Wheel"
+      initialRouteName="Calendar"
     >
+      <MainTab.Screen
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center' }}>
+              <Feather name="calendar" size={32} color={colors.inputBorder} />
+              {focused && <View style={styles.emphasis} />}
+            </View>
+          ),
+          tabBarShowLabel: false,
+        }}
+        name="Calendar"
+        component={CalendarScreen}
+      />
       <MainTab.Screen
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: 'center' }}>
               <MaterialCommunityIcons
                 name="ship-wheel"
-                size={36}
+                size={40}
                 color={colors.inputBorder}
               />
               {focused && <View style={styles.emphasis} />}
