@@ -14,12 +14,14 @@ import {
 } from 'react-native';
 import { Container, Title, Btn, SocialLogin } from '../components';
 import { colors, fontSizes, utils } from '../helpers/variables';
+import { useDispatch } from 'react-redux';
+import { register } from '../redux/auth/authOperations';
 
 const fullLogoPath = '../assets/images/full-logo.png';
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 const initialState = {
-  nickname: '',
+  username: '',
   email: '',
   password: '',
 };
@@ -30,6 +32,7 @@ export const RegisterScreen = ({ navigation }) => {
   const [passwordConformation, setPasswordConformation] = useState('');
   const [errors, setErrors] = useState('');
 
+  const dispatch = useDispatch();
   const hideKeyboard = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
@@ -42,10 +45,11 @@ export const RegisterScreen = ({ navigation }) => {
     const isFormValid = formValidation();
 
     if (isFormValid) {
-      // dispatch(authSignUpUser(state));
+      // dispatch(authSignUp(state));
+      dispatch(register(state));
       setErrors('');
-      setState(initialState);
       setPasswordConformation('');
+      setState(initialState);
     }
   };
 
@@ -53,7 +57,7 @@ export const RegisterScreen = ({ navigation }) => {
     if (
       !passwordConformation ||
       !state.password ||
-      !state.nickname ||
+      !state.username ||
       !state.email
     ) {
       setErrors("Всі поля обов'язкові");
@@ -112,9 +116,9 @@ export const RegisterScreen = ({ navigation }) => {
                 <TextInput
                   style={styles.input}
                   onFocus={() => setIsShowKeyboard(true)}
-                  value={state.nickname}
+                  value={state.username}
                   onChangeText={value =>
-                    setState(prevState => ({ ...prevState, nickname: value }))
+                    setState(prevState => ({ ...prevState, username: value }))
                   }
                 />
               </View>

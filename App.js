@@ -1,22 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
-// import { useSelector, useDispatch } from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
-import { useRoute } from './router';
-
-// import { Provider } from 'react-redux';
-// import { store } from './redux/store';
-// import { Main } from './components/Main';
+import { Text } from 'react-native';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Main } from './src/components/Main';
+import { persistor, store } from './src/redux/store';
 
 export default function App() {
-  const [isAuth, setIsAuth] = useState(true);
-
-  const routing = useRoute(isAuth);
-
-  // const { stateChange } = useSelector((state) => state.auth);
-  // const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   dispatch(authStateCahngeUser());
-  // }, [stateChange]);
-  return <NavigationContainer>{routing}</NavigationContainer>;
+  return (
+    <Provider store={store}>
+      <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
+        <Main />
+      </PersistGate>
+    </Provider>
+  );
 }

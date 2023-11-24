@@ -10,6 +10,7 @@ import { Title, Container, Section, Goal } from '../components';
 import { colors, fontSizes, utils } from '../helpers/variables';
 import { Agenda, LocaleConfig } from 'react-native-calendars';
 import { useEffect, useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
 
 const imgPath = '../assets/images/achievement.png';
 
@@ -133,7 +134,7 @@ export const CalendarScreen = () => {
         loadItemsForMonth={loadItems}
         selected={actualDate}
         renderItem={item => {
-          console.log(item);
+          // console.log(item);
           return renderItem(item);
         }}
         // renderDay={(day, item) => {

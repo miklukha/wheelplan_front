@@ -12,8 +12,11 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from 'react-native';
+import { useDispatch } from 'react-redux';
+
 import { Container, Title, Btn, SocialLogin } from '../components';
 import { colors, fontSizes, utils } from '../helpers/variables';
+import { login } from '../redux/auth/authOperations';
 
 const fullLogoPath = '../assets/images/full-logo.png';
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -28,6 +31,8 @@ export const LoginScreen = ({ navigation }) => {
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState('');
 
+  const dispatch = useDispatch();
+
   const hideKeyboard = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
@@ -40,7 +45,8 @@ export const LoginScreen = ({ navigation }) => {
     const isFormValid = formValidation();
 
     if (isFormValid) {
-      // dispatch(authSignUpUser(state));
+      console.log('state', state);
+      dispatch(login(state));
       setErrors('');
       setState(initialState);
     }

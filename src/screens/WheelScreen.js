@@ -6,18 +6,25 @@ import {
   Dimensions,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
 
-import { Title, Container, Section } from '../components';
+import { Title, Container, Section, Btn } from '../components';
 import { colors, fontSizes, utils } from '../helpers/variables';
 import { categories } from '../helpers/categories';
+import { logout } from '../redux/auth/authOperations';
 
 import React, { useState, useEffect } from 'react';
 
 export const WheelScreen = ({ navigation }) => {
   const [data, setData] = useState(categories);
 
+  const dispatch = useDispatch();
   const onClick = () => {
     navigation.navigate('Categories');
+  };
+
+  const onLogout = () => {
+    dispatch(logout());
   };
 
   return (
@@ -38,6 +45,7 @@ export const WheelScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <View style={styles.wheel}></View>
+        <Btn handleAction={onLogout}>Logout</Btn>
       </Section>
     </Container>
   );

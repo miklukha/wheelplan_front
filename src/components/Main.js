@@ -1,25 +1,19 @@
-// import React, { useEffect, useState } from "react";
-// import { useSelector, useDispatch } from "react-redux";
-// import { NavigationContainer } from "@react-navigation/native";
-// import { useRoute } from "../router";
-import { View, Text } from 'react-native';
-
-// import { authStateCahngeUser } from "../redux/auth/authOperations";
+import { NavigationContainer } from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useRoute } from '../../router';
+import { useAuth } from '../hooks/useAuth';
+import { fetchCurrent } from '../redux/auth/authOperations';
 
 export const Main = () => {
-  return (
-    <View>
-      <Text>Main Page</Text>
-    </View>
-  );
-  // const { stateChange } = useSelector((state) => state.auth);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const { isLoggedIn } = useAuth();
 
-  // useEffect(() => {
-  //   dispatch(authStateCahngeUser());
-  // }, [stateChange]);
+  useEffect(() => {
+    dispatch(fetchCurrent());
+  }, [dispatch]);
 
-  // const routing = useRoute(stateChange);
+  const routing = useRoute(isLoggedIn);
 
-  // return <NavigationContainer>{routing}</NavigationContainer>;
+  return <NavigationContainer>{routing}</NavigationContainer>;
 };
