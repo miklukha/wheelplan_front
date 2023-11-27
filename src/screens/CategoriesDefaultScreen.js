@@ -1,20 +1,19 @@
-import { useState } from 'react';
-import React from 'react';
-
+import React, { useEffect, useState } from 'react';
 import {
-  View,
+  FlatList,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  FlatList,
-  SafeAreaView,
+  View,
 } from 'react-native';
-import { Title, Container, Section, Btn } from '../components';
+import { Toast } from 'toastify-react-native';
+import { Btn, Container, Section, Title } from '../components';
 import { colors, fontSizes } from '../helpers/variables';
-import { categories } from '../helpers/categories';
+import { getCategories } from '../services/categoriesApi';
 
-export const CategoriesDefaultScreen = ({ navigation }) => {
-  const [data, setData] = useState(categories);
+export const CategoriesDefaultScreen = ({ navigation, route }) => {
+  const [data, setData] = useState([]);
 
   const renderItems = ({ index, item }) => {
     const { name, color } = item;
@@ -36,9 +35,25 @@ export const CategoriesDefaultScreen = ({ navigation }) => {
     );
   };
 
-  const onClick = () => {
-    console.log('add categories');
-  };
+  useEffect(() => {
+    if (route.params?.newCategory) {
+      setData(prevState => [...prevState, route.params?.newCategory]);
+    }
+  }, [route.params?.newCategory]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getCategories();
+        setData(data);
+      } catch (error) {
+        Toast.error('Щось пішло не так :(');
+        console.log(error);
+      }
+    };
+
+    fetchData().catch(console.error);
+  }, []);
 
   return (
     <Container>
@@ -48,10 +63,15 @@ export const CategoriesDefaultScreen = ({ navigation }) => {
           <FlatList
             data={data}
             renderItem={renderItems}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item._id}
           />
         </SafeAreaView>
-        <Btn type="accent" handleAction={onClick}>
+        <Btn
+          type="accent"
+          handleAction={() => {
+            navigation.navigate('CategoryAdd');
+          }}
+        >
           Додати нову категорію
         </Btn>
       </Section>

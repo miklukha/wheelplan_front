@@ -6,3 +6,4 @@ export * from './CategoriesScreen';
 export * from './CategoriesDefaultScreen';
 export * from './CategoryScreen';
 export * from './CalendarScreen';
+export * from './CategoryAddScreen';

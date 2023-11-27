@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useRoute } from '../../router';
 import { useAuth } from '../hooks/useAuth';
 import { fetchCurrent } from '../redux/auth/authOperations';
+import ToastManager from 'toastify-react-native';
 
 export const Main = () => {
   const dispatch = useDispatch();
@@ -15,5 +16,10 @@ export const Main = () => {
 
   const routing = useRoute(isLoggedIn);
 
-  return <NavigationContainer>{routing}</NavigationContainer>;
+  return (
+    <>
+      <ToastManager />
+      <NavigationContainer>{routing}</NavigationContainer>
+    </>
+  );
 };

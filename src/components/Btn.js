@@ -8,7 +8,7 @@ export const Btn = ({ children, type, handleAction }) => {
       activeOpacity={0.5}
       style={{
         ...styles.btn,
-        backgroundColor: type === 'accent' ? colors.accent : colors.mainBg,
+        backgroundColor: type === 'accent' ? colors.accent : 'transparent',
         borderColor: type === 'accent' ? 'transparent' : colors.inputBorder,
       }}
     >

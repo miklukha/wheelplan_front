@@ -1,5 +1,5 @@
-import { Container, Btn, SocialLogin } from '../components';
-import { Text, StyleSheet, Image, View, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { Btn, Container } from '../components';
 import { colors, fontSizes } from '../helpers/variables';
 
 const titleImgPath = '../assets/images/title.png';
@@ -21,13 +21,13 @@ export const MainScreen = ({ navigation }) => {
           </Btn>
           <Btn handleAction={() => navigation.navigate('Login')}>Логін</Btn>
         </View>
-        <View style={styles.anotherWay}>
+        {/* <View style={styles.anotherWay}>
           <View style={styles.continueWrapper}>
             <Text style={styles.text}>Або продовжити з</Text>
-            <Text style={styles.emphasizedText}>Apple, Google</Text>
+            <Text style={styles.emphasizedText}>Google</Text>
           </View>
           <SocialLogin />
-        </View>
+        </View> */}
       </View>
     </Container>
   );
@@ -36,7 +36,7 @@ export const MainScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   wrapper: {
     alignItems: 'center',
-    paddingTop: 130,
+    paddingTop: 150,
   },
   titleImg: {
     width: '90%',
@@ -66,14 +66,14 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   continueWrapper: {
     flexDirection: 'row',
     gap: 4,
   },
   text: {
-    fontSize: fontSizes.xs,
+    fontSize: fontSizes.s,
   },
   emphasizedText: {
     fontWeight: '700',

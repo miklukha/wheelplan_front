@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import {
-  View,
-  Text,
   Image,
-  StyleSheet,
-  TextInput,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Keyboard,
-  TouchableWithoutFeedback,
+  StyleSheet,
+  Text,
+  TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 
-import { Container, Title, Btn, SocialLogin } from '../components';
+import { Btn, Container, Title } from '../components';
 import { colors, fontSizes, utils } from '../helpers/variables';
 import { login } from '../redux/auth/authOperations';
 
@@ -45,7 +45,6 @@ export const LoginScreen = ({ navigation }) => {
     const isFormValid = formValidation();
 
     if (isFormValid) {
-      console.log('state', state);
       dispatch(login(state));
       setErrors('');
       setState(initialState);
@@ -106,7 +105,6 @@ export const LoginScreen = ({ navigation }) => {
               <Btn type="accent" handleAction={handleSubmit}>
                 Логін
               </Btn>
-              <SocialLogin />
             </View>
             <TouchableOpacity
               onPress={() => navigation.navigate('Registration')}
@@ -115,7 +113,6 @@ export const LoginScreen = ({ navigation }) => {
               <Text style={styles.helper}>Немає акаунта? Реєстрація</Text>
             </TouchableOpacity>
           </KeyboardAvoidingView>
-          {/* </View> */}
         </View>
       </TouchableWithoutFeedback>
     </Container>

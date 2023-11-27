@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useState } from 'react';
 import {
-  View,
-  Text,
   Image,
-  StyleSheet,
-  TextInput,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Keyboard,
-  TouchableWithoutFeedback,
+  StyleSheet,
+  Text,
+  TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import { Container, Title, Btn, SocialLogin } from '../components';
-import { colors, fontSizes, utils } from '../helpers/variables';
 import { useDispatch } from 'react-redux';
+import { Btn, Container, Title } from '../components';
+import { colors, fontSizes, utils } from '../helpers/variables';
 import { register } from '../redux/auth/authOperations';
 
 const fullLogoPath = '../assets/images/full-logo.png';
@@ -45,7 +44,6 @@ export const RegisterScreen = ({ navigation }) => {
     const isFormValid = formValidation();
 
     if (isFormValid) {
-      // dispatch(authSignUp(state));
       dispatch(register(state));
       setErrors('');
       setPasswordConformation('');
@@ -161,7 +159,6 @@ export const RegisterScreen = ({ navigation }) => {
               <Btn type="accent" handleAction={handleSubmit}>
                 Реєстрація
               </Btn>
-              <SocialLogin />
             </View>
             <TouchableOpacity
               onPress={() => navigation.navigate('Login')}
@@ -170,7 +167,6 @@ export const RegisterScreen = ({ navigation }) => {
               <Text style={styles.helper}>Вже зареєстровані? Вхід</Text>
             </TouchableOpacity>
           </KeyboardAvoidingView>
-          {/* </View> */}
         </View>
       </TouchableWithoutFeedback>
     </Container>

@@ -1,14 +1,16 @@
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { FontAwesome, AntDesign } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { colors, utils } from '../helpers/variables';
+import { googleRegister } from '../redux/auth/authOperations';
 
 export const SocialLogin = () => {
   return (
     <View style={styles.wrapper}>
-      <TouchableOpacity activeOpacity={0.5}  style={styles.btnWrapper}>
-        <FontAwesome name="apple" size={24} color={colors.mainText} />
-      </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.5} style={styles.btnWrapper}>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        style={styles.btnWrapper}
+        onPress={() => googleRegister()}
+      >
         <AntDesign name="google" size={24} color={colors.mainText} />
       </TouchableOpacity>
     </View>
