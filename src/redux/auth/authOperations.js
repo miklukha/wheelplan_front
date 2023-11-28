@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { Toast } from 'toastify-react-native';
 import { authSlice } from './authSlice';
 
 const { updateUserData, updateToken, updateIsLoggedIn, authLogout } =
@@ -17,6 +18,7 @@ export const register = userData => async dispatch => {
     dispatch(updateToken(data));
     dispatch(updateIsLoggedIn({ isLoggedIn: true }));
   } catch (error) {
+    Toast.error('Щось пішло не так :(');
     console.log(error);
     // throw error;
   }
@@ -32,6 +34,7 @@ export const login = userData => async dispatch => {
     dispatch(updateIsLoggedIn({ isLoggedIn: true }));
   } catch (error) {
     console.log(error);
+    Toast.error('Неправильний пароль чи логін');
   }
 };
 

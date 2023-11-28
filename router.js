@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather, AntDesign } from '@expo/vector-icons';
 
 import { colors } from './src/helpers/variables';
 import {
@@ -13,6 +13,7 @@ import {
   RegisterScreen,
   WheelScreen,
   CalendarScreen,
+  GoalAddScreen,
 } from './src/screens';
 
 const AuthStack = createStackNavigator();
@@ -87,6 +88,23 @@ export const useRoute = isAuth => {
         }}
         name="Wheel"
         component={WheelScreen}
+      />
+      <MainTab.Screen
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center' }}>
+              <AntDesign
+                name="pluscircleo"
+                size={32}
+                color={colors.inputBorder}
+              />
+              {focused && <View style={styles.emphasis} />}
+            </View>
+          ),
+          tabBarShowLabel: false,
+        }}
+        name="GoalAdd"
+        component={GoalAddScreen}
       />
       <MainTab.Screen
         options={{

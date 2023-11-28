@@ -7,3 +7,4 @@ export * from './CategoriesDefaultScreen';
 export * from './CategoryScreen';
 export * from './CalendarScreen';
 export * from './CategoryAddScreen';
+export * from './GoalAddScreen';

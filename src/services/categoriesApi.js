@@ -5,16 +5,20 @@ axios.defaults.baseURL =
   'http://ec2-15-237-125-96.eu-west-3.compute.amazonaws.com:3000';
 
 const getToken = async () => {
-  const initialToken = await AsyncStorage.getItem('token');
-  console.log(initialToken);
+  try {
+    const initialToken = await AsyncStorage.getItem('token');
 
-  if (initialToken) {
-    axios.defaults.headers.common.Authorization = `Bearer ${initialToken}`;
+    if (initialToken) {
+      axios.defaults.headers.common.Authorization = `Bearer ${initialToken}`;
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 
 export const getCategories = async () => {
   try {
+    await getToken();
     const { data } = await axios.get('/api/categories/');
     return data;
   } catch (error) {
@@ -24,6 +28,7 @@ export const getCategories = async () => {
 
 export const addCategory = async categoryData => {
   try {
+    await getToken();
     const { data } = await axios.post('/api/categories/', categoryData);
     return data;
   } catch (error) {

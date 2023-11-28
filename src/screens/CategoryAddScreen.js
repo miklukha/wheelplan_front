@@ -99,7 +99,7 @@ export const CategoryAddScreen = ({ navigation }) => {
                   }
                 />
               </View>
-              <View>
+              <View style={styles.estimateWrapper}>
                 <Text style={styles.inputTitle}>
                   Оцінка категорії (від 0 до 10)*
                 </Text>
@@ -178,11 +178,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   form: {
-    gap: 20,
+    gap: 15,
     marginBottom: 30,
   },
   inputTitle: {
-    fontSize: fontSizes.xs,
+    fontSize: fontSizes.s,
     marginBottom: 5,
     color: colors.auxiliaryText,
   },
@@ -200,11 +200,16 @@ const styles = StyleSheet.create({
 
     color: colors.mainText,
   },
+  estimateWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20,
+  },
   estimateInput: {
     fontSize: fontSizes.s,
 
-    width: 50,
-    height: 50,
+    width: 46,
+    height: 46,
 
     paddingLeft: 15,
 
