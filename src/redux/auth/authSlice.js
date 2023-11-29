@@ -10,22 +10,19 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    updateUserData: (state, { payload }) => ({
-      ...state,
-      user: {
+    updateUserData: (state, { payload }) => {
+      state.user = {
         username: payload.username,
         email: payload.email,
         totalRanking: payload.totalRanking,
-      },
-    }),
-    updateToken: (state, { payload }) => ({
-      ...state,
-      token: payload.token,
-    }),
-    updateIsLoggedIn: (state, { payload }) => ({
-      ...state,
-      isLoggedIn: payload.isLoggedIn,
-    }),
+      };
+    },
+    updateToken: (state, { payload }) => {
+      state.token = payload.token;
+    },
+    updateIsLoggedIn: (state, { payload }) => {
+      state.isLoggedIn = payload.isLoggedIn;
+    },
     authLogout: () => initialState,
   },
 });
