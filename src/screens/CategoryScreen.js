@@ -1,15 +1,44 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView } from 'react-native';
 import { Btn, Container, Section, Title, Goal } from '../components';
-import { goals } from '../helpers/categories';
 import { colors, fontSizes, utils } from '../helpers/variables';
+import { getGoalsByCategory } from '../services/goalsApi';
+import { deleteCategory } from '../services/categoriesApi';
 
-export const CategoryScreen = ({ route }) => {
-  const { name, color, rating } = route.params.item;
-  const [data, setData] = useState(goals);
+export const CategoryScreen = ({ navigation, route }) => {
+  const { name, color, rating, _id } = route.params.item;
+  const [goals, setGoals] = useState([]);
 
   const renderItems = data => {
-    return <Goal data={data} />;
+    return <Goal data={{ ...data, color, name }} />;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getGoalsByCategory(_id);
+        setGoals(data);
+      } catch (error) {
+        Toast.error('Щось пішло не так :(');
+        console.log(error);
+      }
+    };
+
+    fetchData().catch(console.error);
+  }, []);
+
+  const onDelete = async () => {
+    try {
+      await deleteCategory(_id);
+      // navigation.navigate('CategoriesDefault');
+      navigation.navigate({
+        name: 'CategoriesDefault',
+        params: { deleted: _id },
+        merge: true,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -25,16 +54,21 @@ export const CategoryScreen = ({ route }) => {
         </View>
         <SafeAreaView style={styles.goalsWrapper}>
           <FlatList
-            data={data}
+            data={goals}
             renderItem={renderItems}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item._id}
           />
         </SafeAreaView>
         <View style={styles.btnsWrapper}>
-          <Btn type="accent" handleAction={() => console.log('change')}>
+          <Btn
+            type="accent"
+            handleAction={() =>
+              navigation.navigate('CategoryEdit', { item: route.params.item })
+            }
+          >
             Редагувати
           </Btn>
-          <Btn handleAction={() => console.log('delete')}>Видалити</Btn>
+          <Btn handleAction={onDelete}>Видалити</Btn>
         </View>
       </Section>
     </Container>

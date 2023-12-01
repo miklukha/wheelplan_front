@@ -39,7 +39,31 @@ export const CategoriesDefaultScreen = ({ navigation, route }) => {
     if (route.params?.newCategory) {
       setData(prevState => [...prevState, route.params?.newCategory]);
     }
-  }, [route.params?.newCategory]);
+
+    if (route.params?.deleted) {
+      setData(prevState => {
+        return prevState.filter(
+          category => category._id !== route.params.deleted,
+        );
+      });
+    }
+
+    if (route.params?.updateCategory) {
+      setData(prevState => {
+        return prevState.map((category, i, arr) => {
+          if (category._id === route.params.updateCategory._id) {
+            return (arr[i] = route.params.updateCategory);
+          }
+
+          return category;
+        });
+      });
+    }
+  }, [
+    route.params?.newCategory,
+    route.params?.deleted,
+    route.params?.updateCategory,
+  ]);
 
   useEffect(() => {
     const fetchData = async () => {

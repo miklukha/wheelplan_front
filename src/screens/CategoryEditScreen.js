@@ -14,17 +14,16 @@ import ColorPicker, { Panel3, Preview } from 'reanimated-color-picker';
 import Container, { Toast } from 'toastify-react-native';
 import { Btn, Container as MainContainer, Title } from '../components';
 import { colors, fontSizes, utils } from '../helpers/variables';
-import { addCategory } from '../services/categoriesApi';
+import { updateCategory } from '../services/categoriesApi';
 
-const initialState = {
-  name: '',
-  color: '',
-  rating: '0',
-};
+export const CategoryEditScreen = ({ navigation, route }) => {
+  const { item } = route.params;
 
-export const CategoryAddScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState({
+    ...item,
+    rating: `${item.rating}`,
+  });
   const [errors, setErrors] = useState('');
   const [showModal, setShowModal] = useState(false);
 
@@ -59,18 +58,17 @@ export const CategoryAddScreen = ({ navigation }) => {
 
     if (isFormValid) {
       try {
-        const data = await addCategory({
-          ...state,
+        const data = await updateCategory(item._id, {
+          color: state.color,
           rating: parseInt(state.rating),
+          name: state.name,
         });
         navigation.navigate({
           name: 'CategoriesDefault',
-          params: { newCategory: data },
-          // params: { new: true },
+          params: { updateCategory: data },
           merge: true,
         });
         setErrors('');
-        setState(initialState);
       } catch (error) {
         console.log(error);
         Toast.error('Щось пішло не так :(');
@@ -83,7 +81,7 @@ export const CategoryAddScreen = ({ navigation }) => {
       <Container position="top" style={{ width: '100%' }} />
       <TouchableWithoutFeedback onPress={hideKeyboard}>
         <View style={styles.wrapper}>
-          <Title style={styles.title}>Додати категорію</Title>
+          <Title style={styles.title}>Редагувати категорію</Title>
           <KeyboardAvoidingView
             behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
             style={styles.formWrapper}
@@ -156,7 +154,7 @@ export const CategoryAddScreen = ({ navigation }) => {
             <View>{errors && <Text style={styles.error}>{errors}</Text>}</View>
             <View>
               <Btn type="accent" handleAction={handleSubmit}>
-                Додати
+                Змінити
               </Btn>
             </View>
           </KeyboardAvoidingView>

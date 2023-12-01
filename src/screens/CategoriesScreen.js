@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { CategoriesDefaultScreen } from './CategoriesDefaultScreen';
 import { CategoryScreen } from './CategoryScreen';
 import { CategoryAddScreen } from './CategoryAddScreen';
+import { CategoryEditScreen } from './CategoryEditScreen';
 
 const NestedScreen = createStackNavigator();
 
@@ -26,6 +27,13 @@ export const CategoriesScreen = () => {
       <NestedScreen.Screen
         name="CategoryAdd"
         component={CategoryAddScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <NestedScreen.Screen
+        name="CategoryEdit"
+        component={CategoryEditScreen}
         options={{
           headerShown: false,
         }}

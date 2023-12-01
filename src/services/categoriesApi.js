@@ -36,6 +36,29 @@ export const addCategory = async categoryData => {
   }
 };
 
+export const deleteCategory = async categoryId => {
+  try {
+    await getToken();
+    const { data } = await axios.patch(`/api/categories/${categoryId}`);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateCategory = async (categoryId, categoryData) => {
+  try {
+    await getToken();
+    const { data } = await axios.put(
+      `/api/categories/${categoryId}`,
+      categoryData,
+    );
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /**
  * router.get('/:id', authenticate, isValidId, ctrl.getById);
 router.post('/', authenticate, validateBody(schemas.addSchema), ctrl.add);

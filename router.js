@@ -1,19 +1,17 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { MaterialCommunityIcons, Feather, AntDesign } from '@expo/vector-icons';
-
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { colors } from './src/helpers/variables';
 import {
   CategoriesScreen,
+  GoalAddScreen,
   LoginScreen,
   MainScreen,
+  ProfileScreen,
   RegisterScreen,
   WheelScreen,
-  CalendarScreen,
-  GoalAddScreen,
 } from './src/screens';
 
 const AuthStack = createStackNavigator();
@@ -57,21 +55,8 @@ export const useRoute = isAuth => {
           backgroundColor: colors.mainBg,
         },
       }}
-      initialRouteName="Calendar"
+      initialRouteName="Wheel"
     >
-      <MainTab.Screen
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center' }}>
-              <Feather name="calendar" size={32} color={colors.inputBorder} />
-              {focused && <View style={styles.emphasis} />}
-            </View>
-          ),
-          tabBarShowLabel: false,
-        }}
-        name="Calendar"
-        component={CalendarScreen}
-      />
       <MainTab.Screen
         options={{
           tabBarIcon: ({ focused }) => (
@@ -122,6 +107,23 @@ export const useRoute = isAuth => {
         }}
         name="Categories"
         component={CategoriesScreen}
+      />
+      <MainTab.Screen
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center' }}>
+              <MaterialCommunityIcons
+                name="account-box-outline"
+                size={36}
+                color={colors.inputBorder}
+              />
+              {focused && <View style={styles.emphasis} />}
+            </View>
+          ),
+          tabBarShowLabel: false,
+        }}
+        name="Profile"
+        component={ProfileScreen}
       />
     </MainTab.Navigator>
   );

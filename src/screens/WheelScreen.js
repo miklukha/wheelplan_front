@@ -45,7 +45,6 @@ export const WheelScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <View style={styles.wheel}></View>
-        <Btn handleAction={onLogout}>Logout</Btn>
       </Section>
     </Container>
   );

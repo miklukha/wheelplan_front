@@ -1,32 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
+  FlatList,
   Keyboard,
   KeyboardAvoidingView,
-  Modal,
   Platform,
+  Pressable,
+  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   TouchableWithoutFeedback,
   View,
-  SafeAreaView,
-  FlatList,
-  TouchableOpacity,
-  Pressable,
 } from 'react-native';
-import ColorPicker, { Panel3, Preview } from 'reanimated-color-picker';
 import Container, { Toast } from 'toastify-react-native';
 import { Btn, Container as MainContainer, Title } from '../components';
 import { colors, fontSizes, utils } from '../helpers/variables';
 import { getCategories } from '../services/categoriesApi';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { addGoal } from '../services/goalsApi';
 
 const initialState = {
   title: '',
   category: '',
-  habitStart: '',
-  deadline: '',
   value: '0', // number
 };
 
@@ -35,8 +29,6 @@ export const GoalAddScreen = ({ navigation }) => {
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState('');
   const [categories, setCategories] = useState([]);
-  const [deadline, setDeadline] = useState(new Date());
-  const [isChecked, setIsChecked] = useState(false);
 
   const hideKeyboard = () => {
     setIsShowKeyboard(false);
@@ -57,30 +49,6 @@ export const GoalAddScreen = ({ navigation }) => {
     return true;
   };
 
-  const transformDate = date => {
-    const dateObject = new Date(date);
-    const formattedDateString = dateObject
-      .toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      })
-      .replace(/\//g, '-');
-
-    return formattedDateString;
-  };
-
-  const setHabitStart = () => {
-    if (state.deadline !== '') {
-      const transformedDate = transformDate(new Date());
-
-      setState(prevState => ({
-        ...prevState,
-        habitStart: transformedDate,
-      }));
-    }
-  };
-
   const handleSubmit = async () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
@@ -89,18 +57,15 @@ export const GoalAddScreen = ({ navigation }) => {
 
     if (isFormValid) {
       try {
-        setHabitStart();
-        // const data = await addCategory({
-        //   ...state,
-        //   rating: parseInt(state.rating),
-        // });
+        await addGoal(state);
         // navigation.navigate({
         //   name: 'CategoriesDefault',
         //   params: { newCategory: data },
         //   merge: true,
         // });
-        // setErrors('');
-        // setState(initialState);
+        setErrors('');
+        setState(initialState);
+        Toast.success('Ціль успішно добавлена');
       } catch (error) {
         console.log(error);
         Toast.error('Щось пішло не так :(');
@@ -128,15 +93,6 @@ export const GoalAddScreen = ({ navigation }) => {
     );
   };
 
-  const onDeadlineChange = ({ type }, date) => {
-    if (type === 'set') {
-      const transformedDate = transformDate(date);
-      setState(prevState => ({
-        ...prevState,
-        deadline: transformedDate,
-      }));
-    }
-  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -181,38 +137,6 @@ export const GoalAddScreen = ({ navigation }) => {
                   keyExtractor={item => item._id}
                 />
               </SafeAreaView>
-              <View>
-                <BouncyCheckbox
-                  size={24}
-                  fillColor={colors.accent}
-                  unfillColor={colors.mainBg}
-                  text="Регулярна ціль"
-                  textStyle={{
-                    fontSize: fontSizes.s,
-                    textDecorationLine: 'none',
-                    color: colors.auxiliaryText,
-                  }}
-                  innerIconStyle={{
-                    borderRadius: utils.borderRadius,
-                    borderColor: colors.inputBorder,
-                  }}
-                  onPress={isChecked => setIsChecked(isChecked)}
-                />
-              </View>
-              {isChecked && (
-                <View style={styles.deadlineWrapper}>
-                  <Text style={styles.deadlineText}>Дата виконання цілі:</Text>
-                  <DateTimePicker
-                    value={deadline}
-                    accentColor={colors.accent}
-                    locale="uk"
-                    minimumDate={new Date()}
-                    onChange={onDeadlineChange}
-                    style={{ flex: 1 }}
-                  />
-                </View>
-              )}
-
               <View style={styles.estimateWrapper}>
                 <View>
                   <Text style={styles.inputTitle}>
@@ -227,9 +151,9 @@ export const GoalAddScreen = ({ navigation }) => {
                   maxLength={2}
                   style={styles.estimateInput}
                   onFocus={() => setIsShowKeyboard(true)}
-                  value={state.rating}
+                  value={state.value}
                   onChangeText={value =>
-                    setState(prevState => ({ ...prevState, rating: value }))
+                    setState(prevState => ({ ...prevState, value }))
                   }
                 />
               </View>
@@ -285,7 +209,6 @@ const styles = StyleSheet.create({
   estimateWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'space-between',
     gap: 20,
   },
   estimateInput: {

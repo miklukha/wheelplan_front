@@ -3,11 +3,9 @@ import { AntDesign } from '@expo/vector-icons';
 
 import { colors, fontSizes } from '../helpers/variables';
 
-const categoryColor = '#00ff00';
-
 export const Goal = ({ data }) => {
-  const { index, item } = data;
-  const { name, status, category } = item;
+  const { index, item, color: categoryColor, name: categoryName } = data;
+  const { title, status } = item;
 
   return (
     <TouchableOpacity
@@ -21,14 +19,14 @@ export const Goal = ({ data }) => {
       }}
     >
       <View style={styles.wrapper}>
-        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.name}>{title}</Text>
         {status && (
           <AntDesign name="checkcircleo" size={20} color={colors.mainText} />
         )}
       </View>
       <View style={styles.category}>
         <View style={{ ...styles.mark, backgroundColor: categoryColor }}></View>
-        <Text style={styles.categoryName}>{category}</Text>
+        <Text style={styles.categoryName}>{categoryName}</Text>
       </View>
     </TouchableOpacity>
   );
