@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, SafeAreaView } from 'react-native';
-import { Btn, Container, Section, Title, Goal } from '../components';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback, useState } from 'react';
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Btn, Container, Goal, Section, Title } from '../components';
 import { colors, fontSizes, utils } from '../helpers/variables';
-import { getGoalsByCategory } from '../services/goalsApi';
 import { deleteCategory } from '../services/categoriesApi';
+import { getGoalsByCategory } from '../services/goalsApi';
 
 export const CategoryScreen = ({ navigation, route }) => {
   const { name, color, rating, _id } = route.params.item;
@@ -13,29 +14,26 @@ export const CategoryScreen = ({ navigation, route }) => {
     return <Goal data={{ ...data, color, name }} />;
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getGoalsByCategory(_id);
-        setGoals(data);
-      } catch (error) {
-        Toast.error('Щось пішло не так :(');
-        console.log(error);
-      }
-    };
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const data = await getGoalsByCategory(_id);
+          setGoals(data);
+        } catch (error) {
+          Toast.error('Щось пішло не так :(');
+          console.log(error);
+        }
+      };
 
-    fetchData().catch(console.error);
-  }, []);
+      fetchData().catch(console.error);
+    }, []),
+  );
 
   const onDelete = async () => {
     try {
       await deleteCategory(_id);
-      // navigation.navigate('CategoriesDefault');
-      navigation.navigate({
-        name: 'CategoriesDefault',
-        params: { deleted: _id },
-        merge: true,
-      });
+      navigation.navigate('CategoriesDefault');
     } catch (error) {
       console.log(error);
     }

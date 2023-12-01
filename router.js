@@ -6,7 +6,7 @@ import { StyleSheet, View } from 'react-native';
 import { colors } from './src/helpers/variables';
 import {
   CategoriesScreen,
-  GoalAddScreen,
+  GoalsScreen,
   LoginScreen,
   MainScreen,
   ProfileScreen,
@@ -88,8 +88,8 @@ export const useRoute = isAuth => {
           ),
           tabBarShowLabel: false,
         }}
-        name="GoalAdd"
-        component={GoalAddScreen}
+        name="Goals"
+        component={GoalsScreen}
       />
       <MainTab.Screen
         options={{

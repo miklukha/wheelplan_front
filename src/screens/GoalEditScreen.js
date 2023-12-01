@@ -1,12 +1,8 @@
-import { useFocusEffect } from '@react-navigation/native';
-import { useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  FlatList,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
@@ -16,20 +12,16 @@ import {
 import Container, { Toast } from 'toastify-react-native';
 import { Btn, Container as MainContainer, Title } from '../components';
 import { colors, fontSizes, utils } from '../helpers/variables';
-import { getCategories } from '../services/categoriesApi';
-import { addGoal } from '../services/goalsApi';
+import { getCategoryById } from '../services/categoriesApi';
+import { deleteGoal, updateGoal } from '../services/goalsApi';
 
-const initialState = {
-  title: '',
-  category: '',
-  value: '0', // number
-};
+export const GoalEditScreen = ({ navigation, route }) => {
+  const { item } = route.params;
 
-export const GoalAddScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState({ ...item, value: `${item.value}` });
   const [errors, setErrors] = useState('');
-  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState({});
 
   const hideKeyboard = () => {
     setIsShowKeyboard(false);
@@ -58,10 +50,13 @@ export const GoalAddScreen = ({ navigation }) => {
 
     if (isFormValid) {
       try {
-        await addGoal(state);
+        const data = await updateGoal(item._id, {
+          value: parseInt(state.value),
+          title: state.title,
+          category: state.category,
+        });
         navigation.navigate('Wheel');
         setErrors('');
-        setState(initialState);
       } catch (error) {
         console.log(error);
         Toast.error('Щось пішло не так :(');
@@ -69,48 +64,35 @@ export const GoalAddScreen = ({ navigation }) => {
     }
   };
 
-  const renderCategories = ({ item }) => {
-    const { name, color } = item;
-
-    return (
-      <Pressable
-        activeOpacity={0.5}
-        onPress={() => {
-          setState(prevState => ({ ...prevState, category: item._id }));
-        }}
-        style={{
-          ...styles.category,
-          borderWidth: state.category === item._id ? 2 : 1,
-        }}
-      >
-        <View style={{ ...styles.mark, backgroundColor: color }}></View>
-        <Text style={styles.categoryName}>{name}</Text>
-      </Pressable>
-    );
+  const onDelete = async () => {
+    try {
+      await deleteGoal(item._id);
+      navigation.navigate('Wheel');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      const fetchData = async () => {
-        try {
-          const data = await getCategories();
-          setCategories(data);
-        } catch (error) {
-          Toast.error('Щось пішло не так :(');
-          console.log(error);
-        }
-      };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getCategoryById(item.category);
+        setCategory(data);
+      } catch (error) {
+        Toast.error('Щось пішло не так :(');
+        console.log(error);
+      }
+    };
 
-      fetchData().catch(console.error);
-    }, []),
-  );
+    fetchData().catch(console.error);
+  }, []);
 
   return (
     <MainContainer>
       <Container position="top" style={{ width: '100%' }} />
       <TouchableWithoutFeedback onPress={hideKeyboard}>
         <View style={styles.wrapper}>
-          <Title style={styles.title}>Додати ціль</Title>
+          <Title style={styles.title}>Редагувати ціль</Title>
           <KeyboardAvoidingView
             behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
             style={styles.formWrapper}
@@ -127,14 +109,12 @@ export const GoalAddScreen = ({ navigation }) => {
                   }
                 />
               </View>
-              <SafeAreaView>
-                <FlatList
-                  contentContainerStyle={styles.categoriesWrapper}
-                  data={categories}
-                  renderItem={renderCategories}
-                  keyExtractor={item => item._id}
-                />
-              </SafeAreaView>
+              <View>
+                <Text style={styles.inputTitle}>Назва категорії</Text>
+                <Text style={{ ...styles.categoryName, fontWeight: '700' }}>
+                  {category.name}
+                </Text>
+              </View>
               <View style={styles.estimateWrapper}>
                 <View>
                   <Text style={styles.inputTitle}>
@@ -157,10 +137,11 @@ export const GoalAddScreen = ({ navigation }) => {
               </View>
             </View>
             <View>{errors && <Text style={styles.error}>{errors}</Text>}</View>
-            <View>
+            <View style={styles.btnsWrapper}>
               <Btn type="accent" handleAction={handleSubmit}>
-                Додати
+                Змінити
               </Btn>
+              <Btn handleAction={onDelete}>Видалити</Btn>
             </View>
           </KeyboardAvoidingView>
         </View>
@@ -188,6 +169,10 @@ const styles = StyleSheet.create({
   inputTitle: {
     fontSize: fontSizes.s,
     marginBottom: 5,
+    color: colors.auxiliaryText,
+  },
+  categoryName: {
+    fontSize: fontSizes.s,
     color: colors.auxiliaryText,
   },
   input: {
@@ -269,5 +254,9 @@ const styles = StyleSheet.create({
   deadlineWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  btnsWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

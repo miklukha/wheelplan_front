@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback, useState } from 'react';
 import {
   FlatList,
   SafeAreaView,
@@ -12,7 +13,7 @@ import { Btn, Container, Section, Title } from '../components';
 import { colors, fontSizes } from '../helpers/variables';
 import { getCategories } from '../services/categoriesApi';
 
-export const CategoriesDefaultScreen = ({ navigation, route }) => {
+export const CategoriesDefaultScreen = ({ navigation }) => {
   const [data, setData] = useState([]);
 
   const renderItems = ({ index, item }) => {
@@ -35,49 +36,21 @@ export const CategoriesDefaultScreen = ({ navigation, route }) => {
     );
   };
 
-  useEffect(() => {
-    if (route.params?.newCategory) {
-      setData(prevState => [...prevState, route.params?.newCategory]);
-    }
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const data = await getCategories();
+          setData(data);
+        } catch (error) {
+          Toast.error('Щось пішло не так :(');
+          console.log(error);
+        }
+      };
 
-    if (route.params?.deleted) {
-      setData(prevState => {
-        return prevState.filter(
-          category => category._id !== route.params.deleted,
-        );
-      });
-    }
-
-    if (route.params?.updateCategory) {
-      setData(prevState => {
-        return prevState.map((category, i, arr) => {
-          if (category._id === route.params.updateCategory._id) {
-            return (arr[i] = route.params.updateCategory);
-          }
-
-          return category;
-        });
-      });
-    }
-  }, [
-    route.params?.newCategory,
-    route.params?.deleted,
-    route.params?.updateCategory,
-  ]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getCategories();
-        setData(data);
-      } catch (error) {
-        Toast.error('Щось пішло не так :(');
-        console.log(error);
-      }
-    };
-
-    fetchData().catch(console.error);
-  }, []);
+      fetchData().catch(console.error);
+    }, []),
+  );
 
   return (
     <Container>

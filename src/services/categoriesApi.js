@@ -59,6 +59,16 @@ export const updateCategory = async (categoryId, categoryData) => {
   }
 };
 
+export const getCategoryById = async categoryId => {
+  try {
+    await getToken();
+    const { data } = await axios.get(`/api/categories/${categoryId}`);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /**
  * router.get('/:id', authenticate, isValidId, ctrl.getById);
 router.post('/', authenticate, validateBody(schemas.addSchema), ctrl.add);

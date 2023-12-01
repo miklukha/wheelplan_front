@@ -9,3 +9,5 @@ export * from './CategoryAddScreen';
 export * from './GoalAddScreen';
 export * from './ProfileScreen';
 export * from './CategoryEditScreen';
+export * from './GoalEditScreen';
+export * from './GoalsScreen';

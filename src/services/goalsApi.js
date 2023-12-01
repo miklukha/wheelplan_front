@@ -45,3 +45,23 @@ export const addGoal = async goalData => {
     console.log(error);
   }
 };
+
+export const updateGoal = async (goalId, goalData) => {
+  try {
+    await getToken();
+    const { data } = await axios.put(`/api/goals/${goalId}`, goalData);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteGoal = async goalId => {
+  try {
+    await getToken();
+    const { data } = await axios.patch(`/api/goals/${goalId}`);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};

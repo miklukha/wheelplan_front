@@ -1,18 +1,20 @@
-import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-
+import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors, fontSizes } from '../helpers/variables';
 
 export const Goal = ({ data }) => {
+  const navigation = useNavigation();
+
   const { index, item, color: categoryColor, name: categoryName } = data;
   const { title, status } = item;
 
   return (
     <TouchableOpacity
       activeOpacity={0.5}
-      // onPress={() => {
-      //   navigation.navigate('Category', { item });
-      // }}
+      onPress={() => {
+        navigation.navigate('Goals', { screen: 'GoalEdit', params: { item } });
+      }}
       style={{
         ...styles.goal,
         borderTopWidth: index === 0 ? 1 : 0,
