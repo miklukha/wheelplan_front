@@ -69,6 +69,18 @@ export const getCategoryById = async categoryId => {
   }
 };
 
+export const updateRating = async (categoryId, rating) => {
+  try {
+    await getToken();
+    const { data } = await axios.patch(
+      `/api/categories/${categoryId}/rating`,
+      rating,
+    );
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 /**
  * router.get('/:id', authenticate, isValidId, ctrl.getById);
 router.post('/', authenticate, validateBody(schemas.addSchema), ctrl.add);
@@ -86,5 +98,6 @@ router.patch(
   authenticate,
   isValidId,
   validateBody(schemas.updateRatingSchema),
-  ctrl.deleteById,
+  ctrl.updateRating,
+);
  */

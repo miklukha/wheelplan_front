@@ -5,26 +5,68 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { Toast } from 'toastify-react-native';
 import { colors, fontSizes } from '../helpers/variables';
 import { updateGoalStatus } from '../services/goalsApi';
+import { updateRating } from '../services/categoriesApi';
 
-export const Goal = ({ data }) => {
+export const Goal = ({ data, updateWheelScreen }) => {
   const navigation = useNavigation();
 
   const { index, item, category } = data;
-  const { title, status } = item;
+  const { title, status, _id, value } = item;
 
   const [isChecked, setIsChecked] = useState(status);
+
+  const updateCategoryRating = async operation => {
+    let worth = 0;
+
+    if (value === 0) {
+      worth = 0;
+    } else if (value === 10) {
+      worth = 3;
+    } else if (value >= 7) {
+      worth = 2;
+    } else if (value <= 6) {
+      worth = 1;
+    } else {
+      worth = 0;
+    }
+
+    try {
+      if (operation === '+') {
+        await updateRating(category._id, {
+          rating: category.rating + worth,
+        });
+      }
+
+      if (operation === '-') {
+        await updateRating(category._id, {
+          rating: category.rating - worth,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      Toast.error('Щось пішло не так :(');
+    }
+  };
 
   const handleCheck = async isChecked => {
     setIsChecked(isChecked);
 
     try {
-      await updateGoalStatus(item._id, {
+      await updateGoalStatus(_id, {
         status: isChecked,
       });
+
+      isChecked
+        ? await updateCategoryRating('+')
+        : await updateCategoryRating('-');
+
+      updateWheelScreen();
     } catch (error) {
       console.log(error);
       Toast.error('Щось пішло не так :(');
     }
+
+    setIsChecked(isChecked);
   };
 
   return (

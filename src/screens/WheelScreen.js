@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -24,6 +24,7 @@ import { getGoals } from '../services/goalsApi';
 export const WheelScreen = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
   const [goals, setGoals] = useState([]);
+  const [estimate, setEstimate] = useState(-1);
 
   const onClick = () => {
     navigation.navigate('Categories');
@@ -35,15 +36,34 @@ export const WheelScreen = ({ navigation }) => {
 
   const renderGoals = data => {
     const category = getCategory(data.item.category);
-    return <Goal data={{ ...data, category }} />;
+    return (
+      <Goal
+        data={{ ...data, category }}
+        updateWheelScreen={updateWheelScreen}
+      />
+    );
   };
 
   const calculateEstimate = () => {
-    const sum = categories.reduce((sum, category) => {
-      return (sum += category.rating);
-    }, 0);
+    if (categories.length !== 0) {
+      const sum = categories.reduce((sum, category) => {
+        return (sum += category.rating);
+      }, 0);
 
-    return (sum / categories.length).toFixed(1);
+      setEstimate((sum / categories.length).toFixed(1));
+    }
+  };
+
+  const updateWheelScreen = async () => {
+    try {
+      const updatedCategories = await getCategories();
+      setCategories(updatedCategories);
+
+      calculateEstimate();
+    } catch (error) {
+      console.log(error);
+      Toast.error('Щось пішло не так :(');
+    }
   };
 
   useFocusEffect(
@@ -55,13 +75,17 @@ export const WheelScreen = ({ navigation }) => {
 
           const goalsData = await getGoals();
           setGoals(goalsData);
+
+          // calculateEstimate();
         } catch (error) {
           Toast.error('Щось пішло не так :(');
           console.log(error);
         }
       };
 
-      fetchData().catch(console.error);
+      fetchData()
+        .then(() => calculateEstimate())
+        .catch(console.error);
     }, []),
   );
 
@@ -72,7 +96,9 @@ export const WheelScreen = ({ navigation }) => {
         <View style={styles.descWrapper}>
           <View style={styles.estimateWrapper}>
             <Text style={styles.estimateText}>Загальна оцінка:</Text>
-            <Text style={styles.estimate}>{calculateEstimate()}</Text>
+            <Text style={styles.estimate}>
+              {estimate < 0 ? calculateEstimate() : estimate}
+            </Text>
           </View>
           <TouchableOpacity
             onPress={() => onClick()}
