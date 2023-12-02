@@ -129,10 +129,12 @@ export const GoalAddScreen = ({ navigation }) => {
               </View>
               <SafeAreaView>
                 <FlatList
-                  contentContainerStyle={styles.categoriesWrapper}
+                  columnWrapperStyle={{ flexWrap: 'wrap', flex: 1, gap: 10 }}
+                  // contentContainerStyle={styles.categoriesWrapper}
                   data={categories}
                   renderItem={renderCategories}
                   keyExtractor={item => item._id}
+                  numColumns={5}
                 />
               </SafeAreaView>
               <View style={styles.estimateWrapper}>
@@ -236,11 +238,11 @@ const styles = StyleSheet.create({
   btnWrapper: {
     paddingHorizontal: 20,
   },
-  categoriesWrapper: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
+  // categoriesWrapper: {
+  //   flexDirection: 'row',
+  //   flexWrap: 'wrap',
+  //   gap: 10,
+  // },
   category: {
     flexDirection: 'row',
     alignItems: 'center',

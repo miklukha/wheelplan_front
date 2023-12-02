@@ -1,31 +1,40 @@
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useDispatch } from 'react-redux';
-
-import { Title, Container, Section, Btn } from '../components';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Toast } from 'toastify-react-native';
+import {
+  VictoryBar,
+  VictoryChart,
+  VictoryPolarAxis,
+  VictoryTheme,
+} from 'victory-native';
+import { Container, Section, Title } from '../components';
 import { colors, fontSizes, utils } from '../helpers/variables';
-import { categories } from '../helpers/categories';
-import { logout } from '../redux/auth/authOperations';
-
-import React, { useState, useEffect } from 'react';
+import { getCategories } from '../services/categoriesApi';
 
 export const WheelScreen = ({ navigation }) => {
-  const [data, setData] = useState(categories);
+  const [data, setData] = useState([]);
 
-  const dispatch = useDispatch();
   const onClick = () => {
     navigation.navigate('Categories');
   };
 
-  const onLogout = () => {
-    dispatch(logout());
-  };
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const data = await getCategories();
+          setData(data);
+        } catch (error) {
+          Toast.error('Щось пішло не так :(');
+          console.log(error);
+        }
+      };
+
+      fetchData().catch(console.error);
+    }, []),
+  );
 
   return (
     <Container>
@@ -44,7 +53,54 @@ export const WheelScreen = ({ navigation }) => {
             <MaterialIcons name="edit" size={18} color={colors.mainText} />
           </TouchableOpacity>
         </View>
-        <View style={styles.wheel}></View>
+        <View style={{ alignItems: 'center' }}>
+          {data.length !== 0 && (
+            <VictoryChart
+              polar
+              theme={VictoryTheme.material}
+              width={400}
+              height={400}
+            >
+              {data.map(({ name, _id }) => {
+                return (
+                  <VictoryPolarAxis
+                    domain={[0, 10]}
+                    dependentAxis
+                    key={_id}
+                    label={name}
+                    labelPlacement="perpendicular"
+                    style={{
+                      tickLabels: { fill: 'none' },
+                      axisLabel: {
+                        fill: colors.mainText,
+                      },
+                      axis: { stroke: 'none' },
+                    }}
+                    axisValue={name}
+                  />
+                );
+              })}
+              <VictoryBar
+                barWidth={360 / data.length}
+                data={data.map(({ name, rating, color }) => {
+                  return {
+                    x: name,
+                    y: rating,
+                    color,
+                  };
+                })}
+                style={{
+                  data: { fill: ({ datum }) => datum.color && datum.color },
+                  labels: {
+                    fontWeight: '700',
+                    fill: colors.mainText,
+                  },
+                }}
+                labels={({ datum }) => datum.y}
+              />
+            </VictoryChart>
+          )}
+        </View>
       </Section>
     </Container>
   );
@@ -81,5 +137,7 @@ const styles = StyleSheet.create({
     borderRadius: utils.borderRadius,
     borderColor: colors.inputBorder,
   },
-  wheel: {},
+  wheel: {
+    // alignItems: 'center',
+  },
 });
