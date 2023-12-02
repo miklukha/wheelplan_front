@@ -57,9 +57,14 @@ export const Goal = ({ data }) => {
         </Text>
         <View style={styles.category}>
           <View
-            style={{ ...styles.mark, backgroundColor: category.color }}
+            style={{
+              ...styles.mark,
+              backgroundColor: category?.color || colors.auxiliary,
+            }}
           ></View>
-          <Text style={styles.categoryName}>{category.name}</Text>
+          <Text style={styles.categoryName}>
+            {category?.name || 'без категорії'}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

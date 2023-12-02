@@ -134,7 +134,7 @@ export const GoalAddScreen = ({ navigation }) => {
                   data={categories}
                   renderItem={renderCategories}
                   keyExtractor={item => item._id}
-                  numColumns={5}
+                  numColumns={20}
                 />
               </SafeAreaView>
               <View style={styles.estimateWrapper}>

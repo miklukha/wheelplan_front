@@ -16,20 +16,20 @@ const getToken = async () => {
   }
 };
 
-// export const getCategories = async () => {
-//   try {
-//     await getToken();
-//     const { data } = await axios.get('/api/categories/');
-//     return data;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 export const getGoalsByCategory = async category => {
   try {
     await getToken();
     const { data } = await axios.get(`/api/goals/category/${category}`);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getGoals = async () => {
+  try {
+    await getToken();
+    const { data } = await axios.get('/api/goals/');
     return data;
   } catch (error) {
     console.log(error);

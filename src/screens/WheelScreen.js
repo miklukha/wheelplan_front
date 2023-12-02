@@ -1,7 +1,14 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  FlatList,
+  SafeAreaView,
+} from 'react-native';
 import { Toast } from 'toastify-react-native';
 import {
   VictoryBar,
@@ -9,23 +16,45 @@ import {
   VictoryPolarAxis,
   VictoryTheme,
 } from 'victory-native';
-import { Container, Section, Title } from '../components';
+import { Container, Section, Title, Goal } from '../components';
 import { colors, fontSizes, utils } from '../helpers/variables';
 import { getCategories } from '../services/categoriesApi';
+import { getGoals } from '../services/goalsApi';
 
 export const WheelScreen = ({ navigation }) => {
-  const [data, setData] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [goals, setGoals] = useState([]);
 
   const onClick = () => {
     navigation.navigate('Categories');
+  };
+
+  const getCategory = categoryId => {
+    return categories.find(category => categoryId === category._id);
+  };
+
+  const renderGoals = data => {
+    const category = getCategory(data.item.category);
+    return <Goal data={{ ...data, category }} />;
+  };
+
+  const calculateEstimate = () => {
+    const sum = categories.reduce((sum, category) => {
+      return (sum += category.rating);
+    }, 0);
+
+    return (sum / categories.length).toFixed(1);
   };
 
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
         try {
-          const data = await getCategories();
-          setData(data);
+          const categoriesData = await getCategories();
+          setCategories(categoriesData);
+
+          const goalsData = await getGoals();
+          setGoals(goalsData);
         } catch (error) {
           Toast.error('Щось пішло не так :(');
           console.log(error);
@@ -43,7 +72,7 @@ export const WheelScreen = ({ navigation }) => {
         <View style={styles.descWrapper}>
           <View style={styles.estimateWrapper}>
             <Text style={styles.estimateText}>Загальна оцінка:</Text>
-            <Text style={styles.estimate}>7.8</Text>
+            <Text style={styles.estimate}>{calculateEstimate()}</Text>
           </View>
           <TouchableOpacity
             onPress={() => onClick()}
@@ -54,14 +83,14 @@ export const WheelScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <View style={{ alignItems: 'center' }}>
-          {data.length !== 0 && (
+          {categories.length !== 0 && (
             <VictoryChart
               polar
               theme={VictoryTheme.material}
               width={400}
               height={400}
             >
-              {data.map(({ name, _id }) => {
+              {categories.map(({ name, _id }) => {
                 return (
                   <VictoryPolarAxis
                     domain={[0, 10]}
@@ -81,8 +110,8 @@ export const WheelScreen = ({ navigation }) => {
                 );
               })}
               <VictoryBar
-                barWidth={360 / data.length}
-                data={data.map(({ name, rating, color }) => {
+                barWidth={360 / categories.length}
+                data={categories.map(({ name, rating, color }) => {
                   return {
                     x: name,
                     y: rating,
@@ -101,6 +130,15 @@ export const WheelScreen = ({ navigation }) => {
             </VictoryChart>
           )}
         </View>
+        <Text style={styles.text}>Цілі</Text>
+        <SafeAreaView>
+          <FlatList
+            data={goals}
+            renderItem={renderGoals}
+            keyExtractor={item => item._id}
+            style={styles.goalsWrapper}
+          />
+        </SafeAreaView>
       </Section>
     </Container>
   );
@@ -137,7 +175,16 @@ const styles = StyleSheet.create({
     borderRadius: utils.borderRadius,
     borderColor: colors.inputBorder,
   },
-  wheel: {
-    // alignItems: 'center',
+  text: {
+    fontSize: fontSizes.m,
+    fontWeight: '500',
+    marginBottom: 10,
+    color: colors.mainText,
+  },
+  goalsWrapper: {
+    position: 'absolute',
+    zIndex: 10,
+    width: '100%',
+    height: 200,
   },
 });
