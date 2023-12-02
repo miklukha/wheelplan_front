@@ -65,3 +65,13 @@ export const deleteGoal = async goalId => {
     console.log(error);
   }
 };
+
+export const updateGoalStatus = async (goalId, goalData) => {
+  try {
+    await getToken();
+    const { data } = await axios.patch(`/api/goals/${goalId}/status`, goalData);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};

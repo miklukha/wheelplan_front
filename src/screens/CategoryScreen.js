@@ -11,7 +11,7 @@ export const CategoryScreen = ({ navigation, route }) => {
   const [goals, setGoals] = useState([]);
 
   const renderItems = data => {
-    return <Goal data={{ ...data, color, name }} />;
+    return <Goal data={{ ...data, category: route.params.item }} />;
   };
 
   useFocusEffect(

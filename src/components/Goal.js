@@ -1,13 +1,31 @@
-import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { Toast } from 'toastify-react-native';
 import { colors, fontSizes } from '../helpers/variables';
+import { updateGoalStatus } from '../services/goalsApi';
 
 export const Goal = ({ data }) => {
   const navigation = useNavigation();
 
-  const { index, item, color: categoryColor, name: categoryName } = data;
+  const { index, item, category } = data;
   const { title, status } = item;
+
+  const [isChecked, setIsChecked] = useState(status);
+
+  const handleCheck = async isChecked => {
+    setIsChecked(isChecked);
+
+    try {
+      await updateGoalStatus(item._id, {
+        status: isChecked,
+      });
+    } catch (error) {
+      console.log(error);
+      Toast.error('Щось пішло не так :(');
+    }
+  };
 
   return (
     <TouchableOpacity
@@ -20,15 +38,29 @@ export const Goal = ({ data }) => {
         borderTopWidth: index === 0 ? 1 : 0,
       }}
     >
-      <View style={styles.wrapper}>
-        <Text style={styles.name}>{title}</Text>
-        {status && (
-          <AntDesign name="checkcircleo" size={20} color={colors.mainText} />
-        )}
-      </View>
-      <View style={styles.category}>
-        <View style={{ ...styles.mark, backgroundColor: categoryColor }}></View>
-        <Text style={styles.categoryName}>{categoryName}</Text>
+      <BouncyCheckbox
+        size={25}
+        fillColor={colors.inputBorder}
+        unfillColor={colors.mainBg}
+        innerIconStyle={{ borderWidth: 2 }}
+        isChecked={status}
+        onPress={handleCheck}
+      />
+      <View>
+        <Text
+          style={{
+            ...styles.name,
+            textDecorationLine: isChecked ? 'line-through' : 'none',
+          }}
+        >
+          {title}
+        </Text>
+        <View style={styles.category}>
+          <View
+            style={{ ...styles.mark, backgroundColor: category.color }}
+          ></View>
+          <Text style={styles.categoryName}>{category.name}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -36,15 +68,10 @@ export const Goal = ({ data }) => {
 
 const styles = StyleSheet.create({
   goal: {
+    flexDirection: 'row',
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderColor: colors.auxiliary,
-  },
-  wrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 5,
   },
   name: {
     fontSize: fontSizes.s,
