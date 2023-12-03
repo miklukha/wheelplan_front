@@ -30,7 +30,7 @@ export const ProfileScreen = ({ navigation }) => {
             <Text style={styles.text}>{user.username}</Text>
             <Text style={styles.text}>{user.email}</Text>
           </View>
-          <Btn handleAction={onLogout}>Logout</Btn>
+          <Btn handleAction={onLogout}>Вихід</Btn>
         </View>
       </Section>
     </Container>

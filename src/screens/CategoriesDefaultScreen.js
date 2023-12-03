@@ -56,13 +56,18 @@ export const CategoriesDefaultScreen = ({ navigation }) => {
     <Container>
       <Section>
         <Title style={styles.title}>Категорії</Title>
-        <SafeAreaView style={styles.wrapper}>
-          <FlatList
-            data={data}
-            renderItem={renderItems}
-            keyExtractor={item => item._id}
-          />
-        </SafeAreaView>
+        {data.length === 0 ? (
+          <Text style={styles.tip}>Ще немає категорій...</Text>
+        ) : (
+          <SafeAreaView style={styles.wrapper}>
+            <FlatList
+              data={data}
+              renderItem={renderItems}
+              keyExtractor={item => item._id}
+            />
+          </SafeAreaView>
+        )}
+
         <Btn
           type="accent"
           handleAction={() => {
@@ -79,6 +84,11 @@ export const CategoriesDefaultScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   title: {
     marginBottom: 20,
+  },
+  tip: {
+    fontSize: fontSizes.s,
+    color: colors.mainText,
+    marginBottom: 30,
   },
   wrapper: {
     marginBottom: 30,
