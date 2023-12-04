@@ -139,11 +139,9 @@ export const GoalAddScreen = ({ navigation }) => {
               </SafeAreaView>
               <View style={styles.estimateWrapper}>
                 <View>
-                  <Text style={styles.inputTitle}>
-                    Цінність категорії (від 0 до 10)*
-                  </Text>
+                  <Text style={styles.inputTitle}>Цінність (від 0 до 10)*</Text>
                   <Text style={styles.tip}>
-                    (наскільки ціль впливає на категорію)
+                    (наскільки виконання цілі впливає на категорію)
                   </Text>
                 </View>
                 <TextInput
